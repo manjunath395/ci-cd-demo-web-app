@@ -6,7 +6,7 @@ pipeline {
 
         APP_NAME = "demo-webapp"
 
-        DOCKERHUB_REPO = "yourdockerhub/demo-webapp"
+        DOCKERHUB_REPO = "manjunath9795/demo-webapp"
 
         IMAGE_TAG = "${BUILD_NUMBER}"
 
@@ -28,7 +28,7 @@ pipeline {
 
                 git branch: 'main',
                     credentialsId: 'github-creds',
-                    url: 'https://github.com/yourusername/devops-eks-demo.git'
+                    url: 'https://github.com/manjunath395/ci-cd-demo-web-app.git'
             }
         }
 
@@ -176,7 +176,7 @@ pipeline {
 
             echo "Deployment Successful"
 
-            mail to: 'devops-team@company.com',
+            mail to: 'manjunathmi8147@gmail.com',
                  subject: "SUCCESS: Build ${BUILD_NUMBER}",
                  body: "Deployment completed successfully."
         }
@@ -185,7 +185,7 @@ pipeline {
 
             echo "Deployment Failed"
 
-            mail to: 'devops-team@company.com',
+            mail to: 'manjunathmi8147@gmail.com',
                  subject: "FAILED: Build ${BUILD_NUMBER}",
                  body: "Deployment failed. Please investigate."
         }
