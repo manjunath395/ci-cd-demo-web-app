@@ -6,6 +6,12 @@ metadata:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
+
+    # HTTPS Configuration
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-south-1:867492128202:certificate/25b39c00-d07b-41a3-b954-4f3c7b600644
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80},{"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+
 spec:
   rules:
   - host: renovahq.com

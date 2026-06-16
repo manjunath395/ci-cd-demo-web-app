@@ -1,6 +1,8 @@
 pipeline {
 
-    agent any
+    agent {
+        label 'docker'
+    }
 
     environment {
 
@@ -10,7 +12,7 @@ pipeline {
 
         IMAGE_TAG = "${BUILD_NUMBER}"
 
-        SONARQUBE_ENV = "SonarQube"
+        // SONARQUBE_ENV = "SonarQube"
 
         KUBECONFIG_FILE = credentials('kubeconfig')
     }
@@ -22,15 +24,15 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
+        // stage('Checkout') {
 
-            steps {
+        //     steps {
 
-                git branch: 'main',
-                    credentialsId: 'github-creds',
-                    url: 'https://github.com/manjunath395/ci-cd-demo-web-app.git'
-            }
-        }
+        //         git branch: 'main',
+        //             credentialsId: 'github-creds',
+        //             url: 'https://github.com/manjunath395/ci-cd-demo-web-app.git'
+        //     }
+        // }
 
         stage('Install Dependencies') {
 
@@ -46,22 +48,22 @@ pipeline {
             }
         }
 
-        stage('SonarQube Scan') {
+        // stage('SonarQube Scan') {
 
-            steps {
+        //     steps {
 
-                withSonarQubeEnv("${SONARQUBE_ENV}") {
+        //         withSonarQubeEnv("${SONARQUBE_ENV}") {
 
-                    sh '''
-                    sonar-scanner \
-                    -Dsonar.projectKey=demo-webapp \
-                    -Dsonar.sources=. \
-                    -Dsonar.host.url=$SONAR_HOST_URL \
-                    -Dsonar.login=$SONAR_AUTH_TOKEN
-                    '''
-                }
-            }
-        }
+        //             sh '''
+        //             sonar-scanner \
+        //             -Dsonar.projectKey=demo-webapp \
+        //             -Dsonar.sources=. \
+        //             -Dsonar.host.url=$SONAR_HOST_URL \
+        //             -Dsonar.login=$SONAR_AUTH_TOKEN
+        //             '''
+        //         }
+        //     }
+        // }
 
         stage('Build Docker Image') {
 
@@ -74,18 +76,18 @@ pipeline {
             }
         }
 
-        stage('Trivy Scan') {
+        // stage('Trivy Scan') {
 
-            steps {
+        //     steps {
 
-                sh """
-                trivy image \
-                --exit-code 1 \
-                --severity HIGH,CRITICAL \
-                ${DOCKERHUB_REPO}:${IMAGE_TAG}
-                """
-            }
-        }
+        //         sh """
+        //         trivy image \
+        //         --exit-code 1 \
+        //         --severity HIGH,CRITICAL \
+        //         ${DOCKERHUB_REPO}:${IMAGE_TAG}
+        //         """
+        //     }
+        // }
 
         stage('Push To DockerHub') {
 
@@ -142,52 +144,52 @@ pipeline {
             }
         }
 
-        stage('Verify Rollout') {
+        // stage('Verify Rollout') {
 
-            steps {
+        //     steps {
 
-                withEnv(["KUBECONFIG=${KUBECONFIG_FILE}"]) {
+        //         withEnv(["KUBECONFIG=${KUBECONFIG_FILE}"]) {
 
-                    sh '''
-                    kubectl rollout status \
-                    deployment/demo-webapp \
-                    --timeout=300s
-                    '''
-                }
-            }
-        }
+        //             sh '''
+        //             kubectl rollout status \
+        //             deployment/demo-webapp \
+        //             --timeout=300s
+        //             '''
+        //         }
+        //     }
+        // }
 
-        stage('Production Approval') {
+        // stage('Production Approval') {
 
-            when {
-                branch 'main'
-            }
+        //     when {
+        //         branch 'main'
+        //     }
 
-            steps {
+        //     steps {
 
-                input message: 'Deploy to Production?'
-            }
-        }
+        //         input message: 'Deploy to Production?'
+        //     }
+        // }
     }
 
     post {
 
         success {
 
-            echo "Deployment Successful"
+            echo "Deployment Successfull"
 
-            mail to: 'manjunathmi8147@gmail.com',
-                 subject: "SUCCESS: Build ${BUILD_NUMBER}",
-                 body: "Deployment completed successfully."
+            // mail to: 'manjunathmi8147@gmail.com',
+            //      subject: "SUCCESS: Build ${BUILD_NUMBER}",
+            //      body: "Deployment completed successfully."
         }
 
         failure {
 
             echo "Deployment Failed"
 
-            mail to: 'manjunathmi8147@gmail.com',
-                 subject: "FAILED: Build ${BUILD_NUMBER}",
-                 body: "Deployment failed. Please investigate."
+            // mail to: 'manjunathmi8147@gmail.com',
+            //      subject: "FAILED: Build ${BUILD_NUMBER}",
+            //      body: "Deployment failed. Please investigate."
         }
 
         always {

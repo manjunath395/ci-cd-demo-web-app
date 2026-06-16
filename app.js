@@ -1,9 +1,9 @@
-const express = require('express');
+kconst express = require('express');
 
 const app = express();
 
 app.get('/', (req, res) => {
-    res.send('Hello from EKS DevOps Demo!');
+    res.send('Hello everyone, welcome to the DevOps Project Demo!');
 });
 
 app.get('/health', (req, res) => {

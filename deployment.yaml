@@ -1,4 +1,4 @@
-apiVersion: apps/v1
+kkapiVersion: apps/v1
 kind: Deployment
 metadata:
   name: demo-webapp
@@ -12,8 +12,12 @@ spec:
       labels:
         app: demo-webapp
     spec:
+      imagePullSecrets:
+      - name: dockerhub-secret
+
       containers:
       - name: demo-webapp
         image: manjunath9795/demo-webapp:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 3000
