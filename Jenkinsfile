@@ -8,7 +8,7 @@ pipeline {
 
         APP_NAME = "demo-webapp"
 
-        DOCKERHUB_REPO = "manjunath9795/demo-webapp"
+        ECR_REPO = "867492128202.dkr.ecr.ap-south-1.amazonaws.com/demo-webapp"
 
         IMAGE_TAG = "${BUILD_NUMBER}"
 
@@ -71,7 +71,7 @@ pipeline {
 
                 sh """
                 docker build \
-                -t ${DOCKERHUB_REPO}:${IMAGE_TAG} .
+                -t ${ECR_REPO}:${IMAGE_TAG} .
                 """
             }
         }
@@ -84,7 +84,7 @@ pipeline {
         //         trivy image \
         //         --exit-code 1 \
         //         --severity HIGH,CRITICAL \
-        //         ${DOCKERHUB_REPO}:${IMAGE_TAG}
+        //         ${ECR_REPO}:${IMAGE_TAG}
         //         """
         //     }
         // }
@@ -106,12 +106,12 @@ pipeline {
                     -u $DOCKER_USER \
                     --password-stdin
 
-                    docker push ${DOCKERHUB_REPO}:${IMAGE_TAG}
+                    docker push ${ECR_REPO}:${IMAGE_TAG}
 
-                    docker tag ${DOCKERHUB_REPO}:${IMAGE_TAG} \
-                               ${DOCKERHUB_REPO}:latest
+                    docker tag ${ECR_REPO}:${IMAGE_TAG} \
+                               ${ECR}:latest
 
-                    docker push ${DOCKERHUB_REPO}:latest
+                    docker push ${ECR_REPO}:latest
                     '''
                 }
             }
@@ -123,7 +123,7 @@ pipeline {
 
                 sh """
                 sed -i \
-                's|image:.*|image: ${DOCKERHUB_REPO}:${IMAGE_TAG}|g' \
+                's|image:.*|image: ${ECR_REPO}:${IMAGE_TAG}|g' \
                 deployment.yaml
                 """
             }
