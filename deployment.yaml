@@ -12,8 +12,8 @@ spec:
       labels:
         app: demo-webapp
     spec:
-      imagePullSecrets:
-      - name: dockerhub-secret
+      # imagePullSecrets:
+      # - name: dockerhub-secret
 
       containers:
       - name: demo-webapp
