@@ -88,34 +88,31 @@ pipeline {
         //         """
         //     }
         // }
+       stage('Login To ECR') {
+    steps {
+        sh '''
+        aws ecr get-login-password \
+        --region ap-south-1 | \
+        docker login \
+        --username AWS \
+        --password-stdin \
+        867492128202.dkr.ecr.ap-south-1.amazonaws.com
+        '''
+    }
+}
 
-        stage('Push To DockerHub') {
+stage('Push To ECR') {
+    steps {
+        sh """
+        docker push ${ECR_REPO}:${IMAGE_TAG}
 
-            steps {
+        docker tag ${ECR_REPO}:${IMAGE_TAG} \
+                   ${ECR_REPO}:latest
 
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: 'dockerhub-creds',
-                        usernameVariable: 'DOCKER_USER',
-                        passwordVariable: 'DOCKER_PASS'
-                    )
-                ]) {
-
-                    sh '''
-                    echo $DOCKER_PASS | docker login \
-                    -u $DOCKER_USER \
-                    --password-stdin
-
-                    docker push ${ECR_REPO}:${IMAGE_TAG}
-
-                    docker tag ${ECR_REPO}:${IMAGE_TAG} \
-                               ${ECR}:latest
-
-                    docker push ${ECR_REPO}:latest
-                    '''
-                }
-            }
-        }
+        docker push ${ECR_REPO}:latest
+        """
+    }
+}
 
         stage('Update Kubernetes Manifest') {
 
