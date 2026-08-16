@@ -8,7 +8,7 @@ pipeline {
 
         APP_NAME = "demo-webapp"
 
-        ECR_REPO = "867492128202.dkr.ecr.ap-south-1.amazonaws.com/demo-webapp"
+        ECR_REPO = "arn:aws:ecr:us-east-1:749771281515:repository/demo-webapp"
 
         IMAGE_TAG = "${BUILD_NUMBER}"
 
