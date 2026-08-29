@@ -1,1 +1,21 @@
+variable "bucket_name" {
+  description = "Name of the S3 bucket"
+  type        = string
+}
 
+variable "environment" {
+  description = "Environment name"
+  type        = string
+}
+
+variable "versioning" {
+  description = "Enable S3 bucket versioning"
+  type        = string
+  default     = "Enabled"
+}
+
+variable "tags" {
+  description = "Tags to apply to the S3 bucket"
+  type        = map(string)
+  default     = {}
+}
